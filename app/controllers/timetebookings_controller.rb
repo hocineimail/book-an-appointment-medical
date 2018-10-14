@@ -16,6 +16,7 @@ class TimetebookingsController < ApplicationController
 	end
 
 
+
 def repa 
 	@datebooking.timetebookings.each do  |n|
        if n.time ==  @zeb
