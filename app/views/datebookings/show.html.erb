@@ -1,0 +1,219 @@
+
+	
+<div class="sidenav">
+	<a href="/">Home</a>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#clients">Clients</a>
+  <a href="#contact">Contact</a>
+  <button class="dropdown-btn">date  
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container" style="light: 50px;">
+  	 <% @datebookings.each do |datebooking| %>
+    
+       <a href="/datebookings/<%=datebooking.id%>"><%= datebooking.date %> 
+       <p>haw zebis</p>
+       </a> 
+    <%end%>
+  </div>
+  <a href="#contact">Search</a>
+</div>
+
+
+
+<div class="main">
+
+
+
+<p id="notice"><%= notice %></p>
+
+<p style="text-align: center;">
+  <strong>Date:</strong>
+  <%= @datebooking.date %>
+</p>
+
+<p>
+ 
+  <% if @datebooking.etat == true %>
+  <p style="color: green; text-align: center;"> y a encore <%= @res%> rendez vous </p>
+  <% else %>
+ <p style="text-align: center; color: red">complet</p>
+ <%end%>
+</p>
+
+<%if @datebooking.etat == true %>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  prendre un rendez vous
+</button><%end%>
+
+<%= link_to 'Back', datebookings_path %>
+<hr>
+
+
+<table class="table table-hover " id="myTable">
+  <thead>
+    <tr>
+<%= @count%>
+       <th scope="col" >rendez-vous </th>
+      <th scope="col">Le nom</th>
+      <th scope="col">le prenom </th>
+      <th scope="col">telepone </th>
+ 
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr><% @datebooking.timetebookings.each do |f|%>
+    
+        <td><%= f.time  %></td>
+      <td><%= f.nome %></td>
+      <td><%= f.prenom %></td>
+        <td><%= f.telephpne %></td>
+      
+    
+    </tr>
+   <%end%>
+  </tbody>
+</table>
+
+
+
+
+
+<%= form_for([@datebooking, @datebooking.timetebookings.build]) do |f|  %>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">prendre un rendez vous </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <p> 
+<div class="row"><div class="col-md-6">
+  <%= f.label  :nome %><br>
+  <%= f.text_field  :nome ,:class=>"form-control needs-validation"%>
+</p>
+<p>
+  <%= f.label  :prenom %><br>
+  <%= f.text_field  :prenom ,:class=>"form-control needs-validation"%>
+</p>
+<p>
+  <%= f.label :telephpne %><br>
+  <%= f.text_field :telephpne ,:class=>"form-control needs-validation"%>
+</p></div>
+<!-- the time local-->
+<% @time = Time.parse("8:00")%>
+
+<% @tf = Time.parse("16:01") %><br>
+
+<% @tfl = @tf.strftime("%R") %><br>
+
+<% @timel = @time.strftime("%R") %><br>
+
+<% @tfl = @tfl.to_time + 1800 %>
+
+    
+<div class="col-md-3" style="border-right: 1px solid black ">
+	<p style="font-size: 20px; border-bottom: 1px solid black;padding-bottom: 10px;text-align: center;">matin</p>
+<% for i in 1..15 %>
+            <% @etat = false%>
+
+
+            <% if @timel == "12:00"%>
+            <% @time = @time + 3600 %>
+             <% @timel = @time.strftime("%R") %>
+             </div>
+             <div class="col-md-3">
+             	<p style="font-size: 20px; border-bottom: 1px solid black;padding-bottom: 10px" >apres midi</p>
+            <% end%>
+
+
+
+             <% @datebooking.timetebookings.each do |t|%>
+                  <% if t.time == @timel  %>
+                  <% @etat = true %>
+                  <%end%>
+             <%end%>
+             <%if @etat == false %>
+              <% @time = @time + 1800 %>
+             <%= f.radio_button :time,  @timel %><%= "-" %> <%= @timel%> 
+<br>
+            
+             <% @timel = @time.strftime("%R") %>
+             <%else%>
+             <% @t = "X-  " %>
+              <%= @t + @timel %> <br>
+
+             <% @time = @time + 1800 %>
+             <% @timel = @time.strftime("%R") %>
+             <%end%>
+<%end%>
+</div>
+
+ 
+
+
+
+
+</p>
+<p>
+  
+    </div>
+</p>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        <input name="commit" value="prendre un rendez-vous" data-disable-with="Create Timetebooking" type="submit" class="btn btn-primary">
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>
+
+
+
+<script>
+{
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("myTable");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      //check if the two rows should switch place:
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        //if so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
+<a href="javascript:window.print()">Imprimer</a>
